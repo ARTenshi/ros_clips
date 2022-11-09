@@ -89,14 +89,14 @@ def callbackCLIPSRun(data):
     print ("\nPlanning and Running:")
     _clipsLock.acquire()
     
-    steps = data.data
-    if steps.isnumeric() and int(steps) > 0:
-        steps = int(steps)
+    limit = data.data
+    if limit is not None and int(limit) > 0:
+        limit = int(limit)+1
     else:
-        steps = None
+        limit = None
     
     resetLogStream()
-    env.run(steps)
+    env.run(limit)
     getLogStream()
     _clipsLock.release()
 
@@ -195,8 +195,8 @@ def callbackCLIPSSendAndRun(data):
 
 def callbackCLIPSLoadFile(data):
     print ('\nLoading File...')
-    filepath = data.data
-    
+    #filepath = data.data
+    filepath = os.path.abspath(os.path.expanduser(os.path.expandvars(data.data)))
     if filepath[-3:] == 'clp':
         _clipsLock.acquire()
         env.batch_star(filepath)
@@ -307,14 +307,14 @@ def main():
     rospy.Subscriber("/clips_ros/clipspy_assert_string", std_msgs.msg.String, callbackCLIPSAssertString)
     rospy.Subscriber("/clips_ros/clipspy_eval_string", std_msgs.msg.String, callbackCLIPSEvalString)
     
-    rospy.Subscriber("/clips_ros/clipspy_run",std_msgs.msg.String, callbackCLIPSRun)
-    rospy.Subscriber("/clips_ros/clipspy_reset",std_msgs.msg.Bool, callbackCLIPSReset)
-    rospy.Subscriber("/clips_ros/clipspy_clear",std_msgs.msg.Bool, callbackCLIPSClear)
-    rospy.Subscriber("/clips_ros/clipspy_print_facts",std_msgs.msg.Bool, callbackCLIPSPrintFacts)
-    rospy.Subscriber("/clips_ros/clipspy_print_rules",std_msgs.msg.Bool, callbackCLIPSPrintRules)
-    rospy.Subscriber("/clips_ros/clipspy_print_templates",std_msgs.msg.Bool, callbackCLIPSPrintTemplates)
-    rospy.Subscriber("/clips_ros/clipspy_print_instances",std_msgs.msg.Bool, callbackCLIPSPrintInstances)
-    rospy.Subscriber("/clips_ros/clipspy_print_agenda",std_msgs.msg.Bool, callbackCLIPSPrintAgenda)
+    rospy.Subscriber("/clips_ros/clipspy_run",std_msgs.msg.Int64, callbackCLIPSRun)
+    rospy.Subscriber("/clips_ros/clipspy_reset",std_msgs.msg.Empty, callbackCLIPSReset)
+    rospy.Subscriber("/clips_ros/clipspy_clear",std_msgs.msg.Empty, callbackCLIPSClear)
+    rospy.Subscriber("/clips_ros/clipspy_print_facts",std_msgs.msg.Empty, callbackCLIPSPrintFacts)
+    rospy.Subscriber("/clips_ros/clipspy_print_rules",std_msgs.msg.Empty, callbackCLIPSPrintRules)
+    rospy.Subscriber("/clips_ros/clipspy_print_templates",std_msgs.msg.Empty, callbackCLIPSPrintTemplates)
+    rospy.Subscriber("/clips_ros/clipspy_print_instances",std_msgs.msg.Empty, callbackCLIPSPrintInstances)
+    rospy.Subscriber("/clips_ros/clipspy_print_agenda",std_msgs.msg.Empty, callbackCLIPSPrintAgenda)
     
     rospy.Subscriber("/clips_ros/clipspy_send_command",std_msgs.msg.String, callbackCLIPSSend)
     rospy.Subscriber("/clips_ros/clipspy_send_and_run_command", std_msgs.msg.String, callbackCLIPSSendAndRun)
