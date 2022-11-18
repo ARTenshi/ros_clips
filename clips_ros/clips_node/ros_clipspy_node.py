@@ -8,8 +8,8 @@ from clips_ros.srv import *
 #from std_msgs.msg import Bool, String
 import std_msgs.msg
 
-from clips_ros.msg import StringArray
-from clips_ros.srv import RunPlanning
+from clips_ros.msg import PlanningCmdClips, PlanningCmdSend, StringArray
+from clips_ros.srv import RunPlanning, GetPrintMessage
 
 import rospy
 import rospkg
@@ -289,6 +289,40 @@ def clipsInitialize():
     resetLogStream()
 
 
+#####
+def callbackBuildRule(data):
+    print ('\nBuilding Rule: ' + data.data)
+    _clipsLock.acquire()
+    
+    env.build(data.data)
+    
+    _clipsLock.release()
+
+def callbackBuildTemplate(data):
+    print ('\nBuilding Template: ' + data.data)
+    _clipsLock.acquire()
+    
+    env.build(data.data)
+    
+    _clipsLock.release()
+
+def callbackBuildFacts(data):
+    print ('\nBuilding Facts: ' + data.data)
+    _clipsLock.acquire()
+    
+    env.build(data.data)
+    
+    _clipsLock.release()
+
+def callbackLoadFact(data):
+    print ('\nLoading Fact: ' + data.data)
+    _clipsLock.acquire()
+    
+    env.load_facts(data.data)
+    
+    _clipsLock.release()
+
+
 #Services' callbacks
 def callbackRunPlanningService(req):
 
@@ -309,6 +343,43 @@ def callbackRunPlanningService(req):
     _clipsLock.release()
     return plan 
 
+def callbackGetFactsService(req):
+
+    print ("\nGetting Facts:")
+    _clipsLock.acquire()
+
+    facts = []
+    for _fact in env.facts():
+        f = str(_fact.index) + " " + str(_fact)
+        f = f.lstrip()
+        #_id,_f = f.split(maxsplit=1)
+        facts.append(f)
+
+    print(facts)
+    data = StringArray(facts)
+    
+    _clipsLock.release()
+    return data 
+
+def callbackGetRulesService(req):
+
+    print ("\nGetting Rules:")
+    _clipsLock.acquire()
+
+    for rule in env.rules():
+        print(rule)
+
+    rules = []
+    for _rule in env.rules():
+        r = str(_rule)
+        r = r.lstrip()
+        rules.append(r)
+
+    print(rules)
+    data = StringArray(rules)
+    
+    _clipsLock.release()
+    return data 
 
 #Main
 def main():
@@ -344,9 +415,17 @@ def main():
     rospy.Subscriber("/clips_ros/clipspy_send_command",std_msgs.msg.String, callbackCLIPSSend)
     rospy.Subscriber("/clips_ros/clipspy_send_and_run_command", std_msgs.msg.String, callbackCLIPSSendAndRun)
     rospy.Subscriber("/clips_ros/clipspy_load_file",std_msgs.msg.String, callbackCLIPSLoadFile)
-    
+
+    #####
+    rospy.Subscriber("/clips_ros/clipspy_build_rule",std_msgs.msg.String, callbackBuildRule)
+    rospy.Subscriber("/clips_ros/clipspy_build_template",std_msgs.msg.String, callbackBuildTemplate)
+    rospy.Subscriber("/clips_ros/clipspy_build_facts",std_msgs.msg.String, callbackBuildFacts)
+    rospy.Subscriber("/clips_ros/clipspy_load_fact",std_msgs.msg.String, callbackLoadFact)
+
     #Start ROS Services
     rospy.Service("/clips_ros/run_planning", RunPlanning, callbackRunPlanningService)
+    rospy.Service("/clips_ros/get_facts", GetPrintMessage, callbackGetFactsService)
+    rospy.Service("/clips_ros/get_rules", GetPrintMessage, callbackGetRulesService)
     
     #Initialize CLIPS
     clipsInitialize()
