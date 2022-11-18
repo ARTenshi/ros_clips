@@ -177,9 +177,6 @@ def callbackGetRulesService(req):
     print ("\nGetting Rules:")
     _clipsLock.acquire()
 
-    for rule in env.rules():
-        print(rule)
-
     rules = []
     for _rule in env.rules():
         r = str(_rule)
@@ -188,6 +185,23 @@ def callbackGetRulesService(req):
 
     print(rules)
     data = StringArray(rules)
+    
+    _clipsLock.release()
+    return data 
+
+def callbackGetTemplatesService(req):
+
+    print ("\nGetting Rules:")
+    _clipsLock.acquire()
+
+    templates = []
+    for _templates in env.templates():
+        t = str(_templates)
+        t = t.lstrip()
+        templates.append(t)
+
+    print(templates)
+    data = StringArray(templates)
     
     _clipsLock.release()
     return data 
@@ -221,6 +235,7 @@ def main():
     rospy.Service("/clips_ros/run_planning", RunPlanning, callbackRunPlanningService)
     rospy.Service("/clips_ros/get_facts", GetPrintMessage, callbackGetFactsService)
     rospy.Service("/clips_ros/get_rules", GetPrintMessage, callbackGetRulesService)
+    rospy.Service("/clips_ros/get_templates", GetPrintMessage, callbackGetTemplatesService)
     
     rospy.loginfo("CLIPS-ROS Initialized")
     

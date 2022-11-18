@@ -41,60 +41,8 @@ catkin_make
 
 **Topics**
 
+
 1. 
-```
-/clips_ros/clipspy_assert_command
-```
-
-of type `clips_ros/PlanningCmdClips`
-
-where PlanningCmdClips.msg:
-
-```
-string name
-string params
-int32 id
-int32 successful
-```
-
-2. 
-```
-/clips_ros/clipspy_eval_command
-```
-
-of type `clips_ros/PlanningCmdSend`
-
-where PlanningCmdSend.msg:
-
-```
-string command
-```
-
-
-3. 
-```
-/clips_ros/clipspy_assert_string
-```
-
-of type `std_msgs/String`
-
-4. 
-```
-/clips_ros/clipspy_eval_string
-```
-
-of type `std_msgs/String`
-
-
-
-5. 
-```
-/clips_ros/clipspy_run
-```
-
-of type `std_msgs/Int64`
-
-6. 
 ```
 /clips_ros/clipspy_reset
 ```
@@ -102,65 +50,15 @@ of type `std_msgs/Int64`
 of type `std_msgs/Empty`
 
 
-7. 
+2. 
 ```
 /clips_ros/clipspy_clear
 ```
 
 of type `std_msgs/Empty`
 
-8. 
-```
-/clips_ros/clipspy_print_facts
-```
 
-of type `std_msgs/Empty`
-
-9. 
-```
-/clips_ros/clipspy_print_rules
-```
-
-of type `std_msgs/Empty`
-
-10. 
-```
-/clips_ros/clipspy_print_templates
-```
-
-of type `std_msgs/Empty`
-
-11. 
-```
-/clips_ros/clipspy_print_instances
-```
-
-of type `std_msgs/Empty`
-
-12. 
-```
-/clips_ros/clipspy_print_agenda
-```
-
-of type `std_msgs/Empty`
-
-
-
-13. 
-```
-/clips_ros/clipspy_send_command
-```
-
-of type `std_msgs/String`
-
-14. 
-```
-/clips_ros/clipspy_send_and_run_command
-```
-
-of type `std_msgs/String`
-
-15. 
+3. 
 ```
 /clips_ros/clipspy_load_file
 ```
@@ -168,9 +66,79 @@ of type `std_msgs/String`
 of type `std_msgs/String`
 
 
+3. 
+```
+clips_ros/clipspy_build_rule
+```
+
+of type `std_msgs/String`
+
+
+3. 
+```
+/clips_ros/clipspy_build_template
+```
+
+of type `std_msgs/String`
+
+
+3. 
+```
+/clips_ros/clipspy_build_facts
+```
+
+of type `std_msgs/String`
+
+
+3. 
+```
+/clips_ros/clipspy_load_fact
+```
+
+of type `std_msgs/String`
+
+
 **Services**
 
-TBD
+1. 
+```
+/clips_ros/run_planning
+```
+
+of type `clips_ros/RunPlanning` 
+
+
+where RunPlanning.srv:
+
+```
+int64 steps
+---
+StringArray plan
+```
+
+2. 
+
+```
+/clips_ros/get_facts
+```
+
+of type `clips_ros/GetPrintMessage` 
+
+and
+
+```
+/clips_ros/get_rules
+```
+
+of type `clips_ros/GetPrintMessage` 
+
+
+where GetPrintMessage.srv:
+
+```
+---
+StringArray data
+```
 
 ### Initialization
 
@@ -184,7 +152,7 @@ Start the ros_clips in a different terminal:
 
 ```
 source ~/ros_clips_ws/devel/setup.bash
-rosrun clips_ros ros_clipspy_node.py
+rosrun clips_ros ros_clipspy_bridge.py
 ```
 
 ### Usage
@@ -195,29 +163,67 @@ First, load the clp file:
 
 ```
 source ~/ros_clips_ws/devel/setup.bash
-rostopic pub /clips_ros/clipspy_load_file std_msgs/String "data: '~/ros_clips_ws/src/ros_clips/data/clp/cubes_stacks.clp'" 
+rostopic pub /clips_ros/clipspy_load_file std_msgs/String "data: '~/ros_clips_ws/src/ros_clips/data/clp/cubes_stacks_rules.clp'" 
 ```
 
-Then, check the current facts:
+Then, check the current rules:
 
 ```
-rostopic pub /clips_ros/clipspy_print_facts std_msgs/Empty "{}"
+rosservice call /clips_ros/get_rules "{}"
 ```
 
-and rules:
+and facts:
 
 ```
-rostopic pub /clips_ros/clipspy_print_rules std_msgs/Empty "{}"
+rosservice call /clips_ros/get_facts "{}"
 ```
 
-Also, you can run a plan one stepa at a time:
+You can add some new facts as follows:
 
 ```
-rostopic pub /clips_ros/clipspy_run std_msgs/Int64 "data: 1"
+rostopic pub /clips_ros/clipspy_load_fact std_msgs/String "data: '(get-initial-state stacks 2)'"
+rostopic pub /clips_ros/clipspy_load_fact std_msgs/String "data: '(stack A B C)'"
+rostopic pub /clips_ros/clipspy_load_fact std_msgs/String "data: '(stack D E F)'"
+```
+
+You can also add a new goal from a template. First, check the templates:
+
+```
+rosservice call /clips_ros/get_templates "{}"
+```
+
+Then, add the new goal as a fact:
+
+```
+rostopic pub /clips_ros/clipspy_load_fact std_msgs/String "data: '(goal (move F)(on-top-of A))'"
+```
+
+Finally, you can get a plan one step a at a time:
+
+```
+rosservice call /clips_ros/run_planning "steps: 1"
 ```
 
 or all at once:
 
 ```
-rostopic pub /clips_ros/clipspy_run std_msgs/Int64 "data: 0"
+rosservice call /clips_ros/run_planning "steps: 0"
+```
+
+You can check the current facts, after executing the full plan:
+
+```
+rosservice call /clips_ros/get_facts "{}"
+```
+
+add a new goal:
+
+```
+rostopic pub /clips_ros/clipspy_load_fact std_msgs/String "data: '(goal (move A)(on-top-of F))'"
+```
+
+and get the new plan:
+
+```
+rosservice call /clips_ros/run_planning "steps: 0"
 ```
