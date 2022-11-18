@@ -8,6 +8,9 @@ from clips_ros.srv import *
 #from std_msgs.msg import Bool, String
 import std_msgs.msg
 
+from clips_ros.msg import StringArray
+from clips_ros.srv import RunPlanning
+
 import rospy
 import rospkg
 
@@ -32,15 +35,15 @@ def resetLogStream():
     log_stream.truncate(0)
     log_stream.seek(0)
 
-
 def getLogStream():
+    _log = []
     _log = log_stream.getvalue().splitlines()
     for i in range(len(_log)):
         _log[i] = _log[i].rstrip('. ')
-    
     print(_log)
+    return _log
 
-
+#Topics' callbacks
 def callbackCLIPSAssertCommand(data):
     print ("\nAssert name command:" + data.name)
     _clipsLock.acquire()
@@ -285,6 +288,28 @@ def clipsInitialize():
     env.reset()
     resetLogStream()
 
+
+#Services' callbacks
+def callbackRunPlanningService(req):
+
+    print ("\nPlanning and Running:")
+    _clipsLock.acquire()
+    
+    limit = req.steps
+    if limit is not None and int(limit) > 0:
+        limit = int(limit)+1
+    else:
+        limit = None
+    
+    resetLogStream()
+    env.run(limit)
+    _p = getLogStream()
+    plan = StringArray(_p)
+    
+    _clipsLock.release()
+    return plan 
+
+
 #Main
 def main():
     rospy.init_node('clips_ros_bridge')
@@ -319,6 +344,9 @@ def main():
     rospy.Subscriber("/clips_ros/clipspy_send_command",std_msgs.msg.String, callbackCLIPSSend)
     rospy.Subscriber("/clips_ros/clipspy_send_and_run_command", std_msgs.msg.String, callbackCLIPSSendAndRun)
     rospy.Subscriber("/clips_ros/clipspy_load_file",std_msgs.msg.String, callbackCLIPSLoadFile)
+    
+    #Start ROS Services
+    rospy.Service("/clips_ros/run_planning", RunPlanning, callbackRunPlanningService)
     
     #Initialize CLIPS
     clipsInitialize()

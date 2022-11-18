@@ -55,12 +55,14 @@ add_message_files(
   FILES
   PlanningCmdClips.msg
   PlanningCmdSend.msg
+  StringArray.msg
 )
 
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
   PlanningCMD.srv
+  RunPlanning.srv
 )
 
 ## Generate actions in the 'action' folder

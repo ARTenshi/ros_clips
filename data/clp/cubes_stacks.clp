@@ -45,7 +45,7 @@
 (defrule clear-upper-block
 	(goal (move ?block1))
 	(stack ?top  $? ?block1 $?)
-=>
+	=>
 	(assert (goal (move ?top)(on-top-of floor)))
 )
 
