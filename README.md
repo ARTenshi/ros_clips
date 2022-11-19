@@ -116,6 +116,12 @@ int64 steps
 StringArray plan
 ```
 
+with StringArray.msg:
+
+```
+string[]  data
+```
+
 2. 
 
 ```
