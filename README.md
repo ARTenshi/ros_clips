@@ -66,7 +66,7 @@ of type `std_msgs/Empty`
 of type `std_msgs/String`
 
 
-3. 
+4. 
 ```
 clips_ros/clipspy_build_rule
 ```
@@ -74,7 +74,7 @@ clips_ros/clipspy_build_rule
 of type `std_msgs/String`
 
 
-3. 
+5. 
 ```
 /clips_ros/clipspy_build_template
 ```
@@ -82,7 +82,7 @@ of type `std_msgs/String`
 of type `std_msgs/String`
 
 
-3. 
+6. 
 ```
 /clips_ros/clipspy_build_facts
 ```
@@ -90,7 +90,7 @@ of type `std_msgs/String`
 of type `std_msgs/String`
 
 
-3. 
+7. 
 ```
 /clips_ros/clipspy_load_fact
 ```
