@@ -164,7 +164,8 @@ def callbackGetFactsService(req):
         f = str(_fact.index) + " " + str(_fact)
         f = f.lstrip()
         #_id,_f = f.split(maxsplit=1)
-        facts.append(f)
+        if (len(f)>0):
+            facts.append(f)
 
     print(facts)
     data = StringArray(facts)
@@ -181,7 +182,8 @@ def callbackGetRulesService(req):
     for _rule in env.rules():
         r = str(_rule)
         r = r.lstrip()
-        rules.append(r)
+        if (len(r)>0):
+            rules.append(r)
 
     print(rules)
     data = StringArray(rules)
@@ -191,14 +193,15 @@ def callbackGetRulesService(req):
 
 def callbackGetTemplatesService(req):
 
-    print ("\nGetting Rules:")
+    print ("\nGetting Templates:")
     _clipsLock.acquire()
 
     templates = []
     for _templates in env.templates():
         t = str(_templates)
         t = t.lstrip()
-        templates.append(t)
+        if (len(t)>0):
+            templates.append(t)
 
     print(templates)
     data = StringArray(templates)
@@ -222,22 +225,22 @@ def main():
     env.add_router(router)
     
     #Start ROS Subscribers
-    rospy.Subscriber("/clips_ros/clipspy_reset",std_msgs.msg.Empty, callbackCLIPSReset)
-    rospy.Subscriber("/clips_ros/clipspy_clear",std_msgs.msg.Empty, callbackCLIPSClear)
-    rospy.Subscriber("/clips_ros/clipspy_load_file",std_msgs.msg.String, callbackCLIPSLoadFile)
+    rospy.Subscriber("/ros_clips/clipspy_reset",std_msgs.msg.Empty, callbackCLIPSReset)
+    rospy.Subscriber("/ros_clips/clipspy_clear",std_msgs.msg.Empty, callbackCLIPSClear)
+    rospy.Subscriber("/ros_clips/clipspy_load_file",std_msgs.msg.String, callbackCLIPSLoadFile)
     
-    rospy.Subscriber("/clips_ros/clipspy_build_rule",std_msgs.msg.String, callbackBuildRule)
-    rospy.Subscriber("/clips_ros/clipspy_build_template",std_msgs.msg.String, callbackBuildTemplate)
-    rospy.Subscriber("/clips_ros/clipspy_build_facts",std_msgs.msg.String, callbackBuildFacts)
-    rospy.Subscriber("/clips_ros/clipspy_load_fact",std_msgs.msg.String, callbackLoadFact)
+    rospy.Subscriber("/ros_clips/clipspy_build_rule",std_msgs.msg.String, callbackBuildRule)
+    rospy.Subscriber("/ros_clips/clipspy_build_template",std_msgs.msg.String, callbackBuildTemplate)
+    rospy.Subscriber("/ros_clips/clipspy_build_facts",std_msgs.msg.String, callbackBuildFacts)
+    rospy.Subscriber("/ros_clips/clipspy_load_fact",std_msgs.msg.String, callbackLoadFact)
     
     #Start ROS Services
-    rospy.Service("/clips_ros/run_planning", RunPlanning, callbackRunPlanningService)
-    rospy.Service("/clips_ros/get_facts", GetPrintMessage, callbackGetFactsService)
-    rospy.Service("/clips_ros/get_rules", GetPrintMessage, callbackGetRulesService)
-    rospy.Service("/clips_ros/get_templates", GetPrintMessage, callbackGetTemplatesService)
+    rospy.Service("/ros_clips/run_planning", RunPlanning, callbackRunPlanningService)
+    rospy.Service("/ros_clips/get_facts", GetPrintMessage, callbackGetFactsService)
+    rospy.Service("/ros_clips/get_rules", GetPrintMessage, callbackGetRulesService)
+    rospy.Service("/ros_clips/get_templates", GetPrintMessage, callbackGetTemplatesService)
     
-    rospy.loginfo("CLIPS-ROS Initialized")
+    rospy.loginfo("ROS-CLIPS Initialized")
     
     #Infinite loop
     rospy.spin()
