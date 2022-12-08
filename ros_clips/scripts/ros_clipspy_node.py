@@ -3,13 +3,10 @@ import clips
 import time, threading, logging, yaml, sys, os
 from io import StringIO
 
-from clips_ros.msg import *
-from clips_ros.srv import *
-#from std_msgs.msg import Bool, String
 import std_msgs.msg
 
-from clips_ros.msg import PlanningCmdClips, PlanningCmdSend, StringArray
-from clips_ros.srv import RunPlanning, GetPrintMessage
+from ros_clips.msg import PlanningCmdClips, PlanningCmdSend, StringArray
+from ros_clips.srv import RunPlanning, GetPrintMessage
 
 import rospy
 import rospkg
