@@ -1,13 +1,13 @@
-;******************************************************
-;*							*
-;*	gpsr_deftemplates.clp				*
-;*							*
-;*			University of Mexico		*
-;*			Jesus Savage-Carmona		*
-;*							*
-;*			20 Dec 2022			*
-;*							*
-;******************************************************
+;****************************************
+;*                                      *
+;* gpsr_deftemplates.clp                *
+;*                                      *
+;*          University of Mexico        *
+;*          Jesus Savage-Carmona        *
+;*                                      *
+;*          20 Dec 2022                 *
+;*                                      *
+;****************************************
 
 (deftemplate item
         (field type
