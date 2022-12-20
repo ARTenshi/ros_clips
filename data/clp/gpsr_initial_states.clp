@@ -1,16 +1,13 @@
-
-;************************************************
-;*						*
-;*	Initial state 				*
-;*						*
-;*                      J.Savage, UNAM          *
-;*						*
-;*                      1/5/20                  *
-;*                                              *
-;************************************************
-
-
-
+;******************************************************
+;*							*
+;*	gpsr_initial_states.clp			*
+;*							*
+;*			University of Mexico		*
+;*			Jesus Savage-Carmona		*
+;*							*
+;*			20 Dec 2022			*
+;*							*
+;******************************************************
 
 (deffacts Initial-state-objects-rooms-zones-actors
 
@@ -42,10 +39,14 @@
 ; Rooms definitions
 	( Room (name deposit)(zone any)(zones dummy1 frontexit frontentrance storage dummy2)(center 0.70 1.51))
 	( Room (name corridor)(zone mail_box)(zones dummy1 frontexit frontentrance storage dummy2)(center 0.6 1.0))
-	( Room (name studio)(zone any)(zones dummy1 frontexit frontentrance storage dummy2)(center 0.25 1.45))
+	( Room (name studio)(zone any)(zones dummy1 frontexit desk storage dummy2)(center 0.25 1.45))
 	( Room (name service)(zone service_table)(zones dummy1 frontexit frontentrance storage dummy2)(center 1.65 0.55))
 	( Room (name kitchen)(zone cold_storage)(zones dummy1 frontexit frontentrance deposit dummy2)(center 1.60 1.40))
-	( Room (name bedroom)(zone any)(zones dummy1 frontexit frontentrance deposit dummy2)(center 1.0 0.55))
+	( Room (name bedroom)(zone desk)(zones dummy1 frontexit frontentrance deposit dummy2)(center 1.0 0.55))
+
+; Humans definitions
+	( item (type Human) (name mother)(room studio)(zone desk)(pose 1.048340 1.107002 0.0))
+	( item (type Human) (name father)(room kitchen)(zone stove)(pose 1.048340 1.107002 0.0))
 
 ; Robots definitions
 	( item (type Robot) (name robot)(zone frontexit)(pose 1.048340 1.107002 0.0))
@@ -70,12 +71,19 @@
 	(real-stack service tools_storage hammer)
 	(real-stack studio library book)
 
-	(goal-stack 4 studio library hammer)
-	(goal-stack 3 bedroom bed book)
-	(goal-stack 2 service service_table soap perfume shampoo)
-	(goal-stack 1 kitchen cold_storage sushi apple milk)
+	;(goal-stack 1 service service_table soap)
+	;(goal-stack 4 studio library hammer)
+	;(goal-stack 3 bedroom bed book)
+	;(goal-stack 2 service service_table soap perfume shampoo)
+	;(goal-stack 1 kitchen cold_storage sushi apple milk)
 
-        (plan (name cubes) (number 0)(duration 0))
+	;(ptrans (actor robot)(obj robot)(to service))
+	;(ptrans (actor robot)(obj robot)(to kitchen))
+	;(ptrans (actor robot)(obj book)(to bedroom))
+	;(ptrans (actor robot)(obj book)(to bedroom))
+	;(ptrans (actor robot)(obj robot)(to mother))
+	;(atrans (actor robot)(obj book)(to father))
+        ;(attempt (name cubes)(id 0)(number 0))
 
 )
 

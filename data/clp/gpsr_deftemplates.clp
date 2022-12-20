@@ -1,13 +1,13 @@
-
-;************************************************
-;*						*
-;*	objects_deftemplates definitions	*
-;*						*
-;*			J.Savage, UNAM		*
-;*			1/5/20			*
-;*						*
-;************************************************
-
+;******************************************************
+;*							*
+;*	gpsr_deftemplates.clp				*
+;*							*
+;*			University of Mexico		*
+;*			Jesus Savage-Carmona		*
+;*							*
+;*			20 Dec 2022			*
+;*							*
+;******************************************************
 
 (deftemplate item
         (field type
@@ -70,10 +70,11 @@
                  (type SYMBOL)
                  (default nil)
         )
-
+	(multifield objs
+                 (type SYMBOL)
+                 (default nil)
+        )
 )
-
-
 
 
 (deftemplate Human
@@ -105,8 +106,6 @@
                  (type SYMBOL)
                  (default false)
         )
-
-	
 )
 
 
@@ -147,7 +146,6 @@
                  (type SYMBOL)
                  (default false)
         )
-
  )
 
 
@@ -192,7 +190,6 @@
                  (type SYMBOL)
                  (default false)
         )
-
  )
 
 
@@ -248,7 +245,6 @@
  )
 
 
-
 (deftemplate Furniture
 	(field name
 		 (type SYMBOL)
@@ -290,7 +286,6 @@
                  (type SYMBOL)
                  (default false)
         )
-
  )
 
 
@@ -327,6 +322,10 @@
                  (type SYMBOL)
                  (default nil)
         )
+        (field id
+                (type NUMBER)
+                (default 1)
+        )
         (field number
                 (type NUMBER)
                 (default 1)
@@ -347,13 +346,32 @@
 		(type SYMBOL)
 		(default active)
 	)
-
 )
 
 
+(deftemplate goal 
+        (slot move)
+        (slot room)
+        (slot zone)
+        (slot on)
+)
 
 
+(deftemplate attempt 
+        (field name
+                 (type SYMBOL)
+                 (default nil)
+        )
+	(field id
+                (type NUMBER)
+                (default 1)
+        )
 
-(deftemplate goal (slot move)(slot room)(slot zone)(slot on))
-(deftemplate attempt (slot move)(slot room)(slot zone)(slot on)(slot number)(field status (type SYMBOL) (default nil)) )
+	(slot move)
+	(slot room)
+	(slot zone)
+	(slot on)
+	(slot number)
+	(field status (type SYMBOL) (default nil)) 
+)
 
