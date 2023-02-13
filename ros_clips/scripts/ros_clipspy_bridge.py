@@ -169,6 +169,20 @@ def callbackLoadFact(data):
         rospy.logerr(traceback.print_exc())
 
 
+def callbackRetractFact(data):
+    try:
+        _clipsLock.acquire()
+
+        for _fact in env.facts():
+            if (_fact.index == data.data):
+            	print ('\nRetracting Fact: %d'%data.data) 
+            	_fact.retract()
+        
+        _clipsLock.release()
+    except:
+        rospy.logerr(traceback.print_exc())
+
+
 #Services' callbacks
 def callbackRunPlanningService(req):
     try:
@@ -284,6 +298,7 @@ def main():
     rospy.Subscriber("/ros_clips/clipspy_build_template",std_msgs.msg.String, callbackBuildTemplate)
     rospy.Subscriber("/ros_clips/clipspy_build_facts",std_msgs.msg.String, callbackBuildFacts)
     rospy.Subscriber("/ros_clips/clipspy_load_fact",std_msgs.msg.String, callbackLoadFact)
+    rospy.Subscriber("/ros_clips/clipspy_retract_fact",std_msgs.msg.Int32, callbackRetractFact)
     
     #Start ROS Services
     rospy.Service("/ros_clips/run_planning", RunPlanning, callbackRunPlanningService)

@@ -98,6 +98,14 @@ of type `std_msgs/String`
 of type `std_msgs/String`
 
 
+8. 
+```
+/ros_clips/clipspy_retract_fact
+```
+
+of type `std_msgs/Int32`
+
+
 **Services**
 
 1. 
